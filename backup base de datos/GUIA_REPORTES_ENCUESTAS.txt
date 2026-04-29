@@ -1,0 +1,232 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  📊 MÓDULO DE REPORTES DE ENCUESTAS - GUÍA DE USO                    ║
+║                                                                        ║
+║  Gráficos y estadísticas estilo Google Forms                          ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════
+¿QUÉ SE AGREGÓ?
+═══════════════════════════════════════════════════════════════════════════
+
+Se creó un módulo completo de reportes con:
+
+✅ Gráficos por tipo de pregunta:
+   - Escala Likert 5: Gráfico de barras horizontal
+   - Selección única: Gráfico de pastel (Pie)
+   - Múltiples selecciones: Gráfico de barras
+   - Textos abiertos: Estadísticas de respuestas
+
+✅ Filtros por fecha:
+   - Seleccionar rango de fechas personalizado
+   - Ver reportes desde una fecha inicial hasta fecha final
+   - Limpiar filtros para ver todo
+
+✅ Estadísticas generales:
+   - Total de respuestas
+   - Distribución por servicio
+   - Edad promedio de respondientes
+   - Período reportado
+
+✅ Acceso desde el panel admin:
+   - Nuevo botón "Reportes" en el header
+   - Ruta: /admin/reportes
+   - Solo accesibles para administradores
+
+
+═══════════════════════════════════════════════════════════════════════════
+CÓMO USAR LOS REPORTES
+═══════════════════════════════════════════════════════════════════════════
+
+PASO 1: Inicia sesión como administrador
+────────────────────────────────────────
+- Ve a Panel admin
+- Ingresa tu email y contraseña (admin@uisau.gob.gt / Admin123!)
+
+PASO 2: Accede a Reportes
+──────────────────────────
+- Una vez autenticado, verás el botón "Reportes" en el header
+- Clic en "Reportes"
+- Serás redirigido a: http://localhost:3001/admin/reportes
+
+PASO 3: Aplica filtros (opcional)
+──────────────────────────────────
+- Fecha de inicio: Selecciona el día en que inician los datos
+- Fecha de fin: Selecciona el día en que finalizan los datos
+- Clic en "Aplicar" para cargar los reportes
+
+PASO 4: Visualiza los gráficos
+───────────────────────────────
+- Los gráficos se cargan automáticamente
+- Cada pregunta tendrá su propio gráfico según su tipo
+- Pasa el mouse sobre los gráficos para ver valores exactos
+
+PASO 5: Interpreta los datos
+─────────────────────────────
+- Cantidad total de respuestas en la parte superior
+- Distribución por servicio (Consulta externa, Emergencia, Encamamiento)
+- Edad promedio de los encuestados
+- Detalles por cada pregunta
+
+
+═══════════════════════════════════════════════════════════════════════════
+TIPOS DE GRÁFICOS EXPLICADOS
+═══════════════════════════════════════════════════════════════════════════
+
+📊 GRÁFICO DE BARRAS (Escala Likert)
+────────────────────────────────────
+Uso: Preguntas con escala de satisfacción (Muy Satisfecho a Muy Insatisfecho)
+Ejemplo: "¿Cuál es su nivel de satisfacción con la atención recibida?"
+
+Colores:
+  🟢 Verde    = Muy Satisfecho (5 puntos)
+  🔵 Azul     = Satisfecho (4 puntos)
+  🟡 Amarillo = Neutral (3 puntos)
+  🔴 Rojo     = Insatisfecho (2 puntos)
+  🔴 Rojo osc= Muy Insatisfecho (1 punto)
+
+Eje Y: Nivel de satisfacción
+Eje X: Cantidad de personas que respondieron
+
+
+🎯 GRÁFICO DE PASTEL (Selección única)
+───────────────────────────────────────
+Uso: Preguntas donde solo se puede elegir una opción
+Ejemplo: "¿Le recomendaría este hospital a un amigo?"
+
+Cada color representa una opción
+El tamaño del sector muestra el porcentaje de respuestas
+
+
+📈 GRÁFICO DE BARRAS VERTICAL (Múltiples respuestas)
+───────────────────────────────────────────────────
+Uso: Preguntas con CheckBox (múltiples selecciones)
+Ejemplo: "¿Cuáles servicios utilizó? (Seleccione todos los que apliquen)"
+
+Cada barra = Una opción
+Altura = Cuántas personas la seleccionaron
+
+
+📝 ESTADÍSTICAS DE TEXTO
+────────────────────────
+Uso: Preguntas abiertas donde escribe el usuario
+Ejemplo: "¿Cómo podemos mejorar nuestros servicios?"
+
+Muestra:
+  - Total de respuestas
+  - Cuántas respondieron
+  - Cuántas están vacías
+
+
+═══════════════════════════════════════════════════════════════════════════
+CASOS DE USO TÍPICOS
+═══════════════════════════════════════════════════════════════════════════
+
+📋 CASO 1: Reporte mensual
+──────────────────────────
+- Fecha inicio: 01/04/2026
+- Fecha fin: 30/04/2026
+- Ver cómo estuvo la satisfacción en ese mes
+
+
+📋 CASO 2: Comparar semanas
+──────────────────────────
+- Semana 1: 01/04 a 07/04
+- Semana 2: 08/04 a 14/04
+- Ejecutar reportes separados y comparar resultados
+
+
+📋 CASO 3: Análisis por período completo
+────────────────────────────────────────
+- Dejar ambos campos de fecha vacíos
+- Clic "Aplicar"
+- Ver TODAS las encuestas respondidas
+
+
+📋 CASO 4: Reporte desde una fecha específica
+──────────────────────────────────────────────
+- Fecha inicio: 15/04/2026
+- Dejar Fecha fin vacía
+- Ver encuestas desde el 15/04 hasta hoy
+
+
+═══════════════════════════════════════════════════════════════════════════
+DATOS MOSTRADOS EN REPORTES
+═══════════════════════════════════════════════════════════════════════════
+
+Estadísticas generales que aparecen en boxes:
+
+1️⃣ Total de respuestas
+   └─ Número exacto de encuestas completadas en el período
+
+2️⃣ Distribución por servicio
+   ├─ Consulta Externa: X respuestas
+   ├─ Emergencia: X respuestas
+   └─ Encamamiento: X respuestas
+
+3️⃣ Edad promedio
+   └─ Edad promedio calculada de los encuestados
+
+4️⃣ Período reportado
+   └─ Muestra las fechas de inicio y fin seleccionadas
+
+
+Por cada pregunta:
+──────────────────
+- Texto de la pregunta
+- Tipo de respuesta
+- Gráfico apropiado
+- Total de respuestas para esa pregunta
+- Promedio (si aplica, para preguntas de escala)
+
+
+═══════════════════════════════════════════════════════════════════════════
+INTERPRETACIÓN DE DATOS
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Buena satisfacción:
+   - Barras altas en "Muy Satisfecho" y "Satisfecho"
+   - Promedio >= 4.0 en escala Likert
+   - Pocos votos en "Insatisfecho"
+
+⚠️ Satisfacción media:
+   - Distribución hacia el centro (Neutral)
+   - Promedio ~3.0
+   - Necesita mejoras
+
+❌ Baja satisfacción:
+   - Barras altas en colores rojo
+   - Promedio < 3.0
+   - Acciones inmediatas recomendadas
+
+
+═══════════════════════════════════════════════════════════════════════════
+ERRORES COMUNES Y SOLUCIONES
+═══════════════════════════════════════════════════════════════════════════
+
+❌ "No hay datos para mostrar"
+   └─ Solución: Amplía el rango de fechas o descarga múltiples encuestas
+
+❌ Gráficos se ven pequeños
+   └─ Solución: Zoom en el navegador (Ctrl + +) o amplía la ventana
+
+❌ No puedo acceder a Reportes
+   └─ Solución: Asegúrate de estar logueado como admin
+
+❌ Los números no coinciden con respuestas
+   └─ Solución: Algunas preguntas pueden no haber sido respondidas
+
+
+═══════════════════════════════════════════════════════════════════════════
+EXPORTACIÓN (Funcionalidad futura)
+═══════════════════════════════════════════════════════════════════════════
+
+Actualmente: Visualización en pantalla
+Próximo: Botón para exportar reportes a PDF/Excel
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+Para más información, consulta con el equipo técnico.

@@ -1,0 +1,38 @@
+RESTAURAR DESDE PGADMIN EN WINDOWS SERVER 2022
+
+Archivo recomendado para llevar en USB:
+- encuesta_satisfaccion-pgadmin-AAAA-MM-DD-HHMMSS.backup
+
+Ese archivo .backup es el formato correcto para restaurar desde pgAdmin.
+
+PASOS EN EL SERVIDOR
+
+1. Copia toda esta carpeta desde la USB al servidor.
+2. Instala PostgreSQL y pgAdmin si todavia no estan instalados.
+3. Abre pgAdmin.
+4. En el arbol de la izquierda, conecta el servidor PostgreSQL.
+5. Si la base no existe, crea una nueva base llamada encuesta_satisfaccion.
+6. Haz clic derecho sobre la base encuesta_satisfaccion.
+7. Selecciona Restore....
+8. En Format, elige Custom or tar.
+9. En Filename, busca este archivo:
+   encuesta_satisfaccion-pgadmin-AAAA-MM-DD-HHMMSS.backup
+10. En la pestana Restore options, deja activado Pre-data, Data y Post-data.
+11. Ejecuta Restore.
+12. Cuando termine, refresca la base y verifica tablas.
+
+TABLAS QUE DEBERIAS VER
+- usuarios
+- encuestas
+- preguntas
+- opciones_respuesta
+- respuestas_encabezado
+- respuestas_detalle
+
+SI NECESITAS GENERAR UN NUEVO RESPALDO
+- Ejecuta crear-backup-pgadmin.ps1 en este mismo directorio.
+
+NOTAS
+- Este proceso funciona en Windows Server 2022 sin cambiar el formato del archivo.
+- Si pgAdmin muestra error de version, usa una version de PostgreSQL/pgAdmin igual o mas nueva que la del equipo origen.
+- Si la base destino ya tiene datos, considera vaciarla o crear una base nueva antes de restaurar.

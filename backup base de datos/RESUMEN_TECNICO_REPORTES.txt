@@ -1,0 +1,276 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║  🔧 MÓDULO DE REPORTES - RESUMEN TÉCNICO DE CAMBIOS                  ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════
+NUEVAS DEPENDENCIAS INSTALADAS
+═══════════════════════════════════════════════════════════════════════════
+
+Frontend:
+  npm install chart.js react-chartjs-2
+
+Estas librerías permiten mostrar gráficos interactivos estilo Google Forms.
+
+
+═══════════════════════════════════════════════════════════════════════════
+ARCHIVOS CREADOS / MODIFICADOS
+═══════════════════════════════════════════════════════════════════════════
+
+BACKEND (Node.js + Express)
+──────────────────────────
+
+✅ c:\UISAU\backend\src\controllers\reportesController.js
+   ├─ obtenerDatosReportes(req, res)
+   │  └─ GET /api/reportes/datos?encuestaId=X&fechaInicio=Y&fechaFin=Z
+   │  └─ Retorna: Datos estructurados de respuestas agrupadas por pregunta
+   │
+   ├─ obtenerResumenReportes(req, res)
+   │  └─ GET /api/reportes/resumen?...
+   │  └─ Retorna: Resumen rápido de estadísticas
+   │
+   ├─ calcularEstadisticas(respuestas, tipo)
+   │  └─ Agrupa datos según tipo de pregunta (Likert, selección, etc.)
+   │
+   ├─ obtenerDistribucionServicio(whereCondition)
+   │  └─ Cuenta respuestas por servicio
+   │
+   ├─ obtenerEdadPromedio(whereCondition)
+   │  └─ Calcula edad promedio de respondientes
+   │
+   └─ obtenerDistribucionDepartamento(whereCondition)
+      └─ Cuenta respuestas por departamento
+
+✅ c:\UISAU\backend\src\routes\reportesRoutes.js
+   ├─ GET /api/reportes/datos         [autenticado]
+   └─ GET /api/reportes/resumen       [autenticado]
+
+✅ c:\UISAU\backend\src\app.js
+   └─ Agregada línea: app.use('/api/reportes', reportesRoutes);
+
+
+FRONTEND (React + Vite)
+───────────────────────
+
+✅ c:\UISAU\frontend\src\services\reportesService.js
+   ├─ reportesService.obtenerDatosReportes(filtros)
+   └─ reportesService.obtenerResumenReportes(filtros)
+
+✅ c:\UISAU\frontend\src\components\reportes\GraficoRespuesta.jsx
+   ├─ Componente React para mostrar gráficos individuales
+   ├─ Soporta: Gráficos Bar, Pie, Doughnut
+   ├─ Colores estilo Google Forms
+   └─ Mostrador de estadísticas para respuestas de texto
+
+✅ c:\UISAU\frontend\src\components\reportes\FiltrosReportes.jsx
+   ├─ Selector de fechas (inicio y fin)
+   ├─ Botón Aplicar y Limpiar
+   └─ Resumen de filtros activos
+
+✅ c:\UISAU\frontend\src\pages\ReportesPage.jsx
+   ├─ Página completa de reportes
+   ├─ Carga datos del backend
+   ├─ Renderiza resumen general + gráficos
+   ├─ Protegida: Solo admin
+   └─ Manejo de autenticación y errores
+
+✅ c:\UISAU\frontend\src\App.jsx
+   └─ Agregada ruta: /admin/reportes => ReportesPage
+
+✅ c:\UISAU\frontend\src\components\common\Header.jsx
+   ├─ Verifica sesión del usuario
+   ├─ Muestra "Reportes" solo para admins
+   └─ Agregue botón "Cerrar sesión"
+
+
+═══════════════════════════════════════════════════════════════════════════
+ARQUITECTURA DEL FLUJO DE DATOS
+═══════════════════════════════════════════════════════════════════════════
+
+Usuario admin
+    │
+    ├─ Click en "Reportes" (Header)
+    │
+    ├─> ReportesPage (React)
+    │   ├─ Renderiza FiltrosReportes
+    │   ├─ Al hacer click "Aplicar", llama reportesService
+    │   │
+    │   ├─> reportesService.obtenerDatosReportes(filtros)
+    │   │   └─> GET /api/reportes/datos?fechaInicio=X&fechaFin=Y
+    │   │
+    │   └─> Backend (Node.js)
+    │       ├─ reportesController.obtenerDatosReportes()
+    │       │  ├─ Consulta RespuestaEncabezado con filtros de fecha
+    │       │  ├─ Incluye detalles de respuestas (Pregunta + OpcionRespuesta)
+    │       │  ├─ Agrupa por pregunta
+    │       │  ├─ Calcula estadísticas (promedio, distribución)
+    │       │  └─ Retorna JSON
+    │       │
+    │       └─ Responde con:
+    │           {
+    │             estadisticas: { totalRespuestas, distribucionPorServicio, ... },
+    │             preguntas: [ 
+    │               {
+    │                 id, texto, tipo, 
+    │                 respuestas: [...],
+    │                 estadisticas: { distribucion, promedio, ... }
+    │               }
+    │             ]
+    │           }
+    │
+    ├─> ReportesPage recibe datos
+    │   ├─ Renderiza cards de estadísticas generales
+    │   └─ Renderiza GraficoRespuesta para cada pregunta
+    │
+    └─> Usuario ve gráficos interactivos
+
+
+═══════════════════════════════════════════════════════════════════════════
+TIPOS DE GRÁFICOS SOPORTADOS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Likert (Escala 5 puntos)
+   └─ Gráfico: Bar horizontal
+   └─ Muestra: Distribución de votos + Promedio
+
+2. Selección única
+   └─ Gráfico: Pie (Pastel)
+   └─ Muestra: Porcentaje de cada opción
+
+3. Checkbox (Múltiples selecciones)
+   └─ Gráfico: Bar vertical
+   └─ Muestra: Conteo de cada opción
+
+4. Texto abierto
+   └─ Gráfico: Cards de estadísticas
+   └─ Muestra: Respondidas vs No respondidas
+
+5. Fecha / Hora
+   └─ Gráfico: Estadísticas básicas
+   └─ Muestra: Total y respondidas
+
+
+═══════════════════════════════════════════════════════════════════════════
+ENDPOINTS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════
+
+GET /api/reportes/datos
+────────────────────────
+
+Query Parameters:
+  - encuestaId     (opcional): ID de la encuesta (integer)
+  - fechaInicio    (opcional): Fecha inicio YYYY-MM-DD (string)
+  - fechaFin       (opcional): Fecha fin YYYY-MM-DD (string)
+
+Ejemplo:
+  GET /api/reportes/datos?fechaInicio=2026-04-01&fechaFin=2026-04-30
+
+Response (200):
+  {
+    "success": true,
+    "estadisticas": {
+      "totalRespuestas": 45,
+      "fechaInicio": "2026-04-01",
+      "fechaFin": "2026-04-30",
+      "distribucionPorServicio": [
+        { "servicio": "consulta_externa", "total": 25 },
+        { "servicio": "emergencia", "total": 15 },
+        { "servicio": "encamamiento", "total": 5 }
+      ],
+      "edadPromedio": "35.2",
+      "distribucionPorDepartamento": [...]
+    },
+    "preguntas": [
+      {
+        "id": 1,
+        "texto": "¿Cuál es su nivel de satisfacción?",
+        "tipo": "likert_5",
+        "respuestas": [...],
+        "estadisticas": {
+          "total": 45,
+          "distribucion": { "5": 20, "4": 15, "3": 8, "2": 2, "1": 0 },
+          "promedio": 4.31,
+          "etiquetas": ["Muy Satisfecho (5)", ...]
+        }
+      },
+      ...
+    ]
+  }
+
+
+GET /api/reportes/resumen
+─────────────────────────
+
+Query Parameters:
+  - Mismas que /api/reportes/datos
+
+Response (200):
+  {
+    "success": true,
+    "totalRespuestas": 45,
+    "periodo": {
+      "inicio": "2026-04-01",
+      "fin": "2026-04-30"
+    }
+  }
+
+
+═══════════════════════════════════════════════════════════════════════════
+SEGURIDAD
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Autenticación JWT requerida
+   └─ Todas las rutas /api/reportes requieren token válido en header
+
+✅ Autorización por rol
+   └─ ReportesPage verifica que user.rol === 'admin'
+
+✅ Validación de filtros
+   └─ Las fechas se validan antes de ejecutar queries
+
+✅ Rate limiting
+   └─ Protegido por globalLimiter (200 req/15min)
+
+
+═══════════════════════════════════════════════════════════════════════════
+CÓMO PROBAR LOCALMENTE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Arranca el backend:
+   cd c:\UISAU\backend
+   npm run dev
+
+2. Arranca el frontend:
+   cd c:\UISAU\frontend
+   npm run dev
+
+3. Login como admin:
+   Email: admin@uisau.gob.gt
+   Password: Admin123!
+
+4. Navega a: http://localhost:5173/admin/reportes
+
+5. Prueba con diferentes filtros de fecha
+
+
+═══════════════════════════════════════════════════════════════════════════
+PRÓXIMAS MEJORAS (Futuro)
+═══════════════════════════════════════════════════════════════════════════
+
+- [ ] Exportación a PDF
+- [ ] Exportación a Excel
+- [ ] Descarga de datos crudos JSON
+- [ ] Gráficos comparativos (mes a mes)
+- [ ] Análisis de tendencias
+- [ ] Comentarios abiertos (buscar palabras clave)
+- [ ] Filtros por departamento / hospital
+- [ ] Tabla de respuestas detalladas
+- [ ] Reportes programados (enviar por email)
+- [ ] Dashboard interactivo avanzado
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+Documentación: c:\UISAU\backup base de datos\GUIA_REPORTES_ENCUESTAS.txt
